@@ -1,0 +1,6 @@
+# Ignore specific directories
+1KG/
+HGMD/
+.obsidian/
+.vscode/
+reference_pipeline/glimpse/data/
