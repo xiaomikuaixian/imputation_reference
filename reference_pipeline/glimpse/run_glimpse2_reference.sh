@@ -94,7 +94,7 @@ REF=1KG_phase3_v5_shapeit2_${CHROM}_filtered.bcf
 MAP=${genetic_maps_b37}/${CHROM}.b37.gmap.gz
 
 # Create directory for bin files
-BIN_DIR="${CHROM_DIR}/mofang_panel_glimpse2"
+BIN_DIR="${CHROM_DIR}/mofang_panel_glimpse2/mofang_panel_glimpse2"
 mkdir -p "$BIN_DIR"
 
 while IFS="" read -r LINE || [ -n "$LINE" ]; do
