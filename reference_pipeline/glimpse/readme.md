@@ -1,10 +1,9 @@
 # GLIMPSE2 参考基因组数据处理流程-0.5%位点集合
 #### 目的：
-	减小插补位点集合，为23mofang 标准版panel使用，插补v22芯片中的民族成分和基因关系位点。panel数据位点深度很高。
+	减小插补位点集合，为标准版panel使用。panel数据位点深度很高。
 #### 参考链接：
 	[[https://odelaneau.github.io/GLIMPSE]]
-	reference_pipeline/glimpse/run_glimpse2_reference.sh
-	运行 bash run_glimpse2_reference.sh chr22 /path/1KG /path/genetic_maps 0.005
+	sample： bash run_glimpse2_reference.sh chr22 /path/1KG /path/genetic_maps 0.005
 #### 软件路径：
 	reference_pipeline/glimpse/GLIMPSE2
 
@@ -59,11 +58,11 @@ bcftools index -f 1KG_phase3_v5_${CHROM}_filtered.sites.vcf.gz
 
 ### 输出文件
 - 输出:
-  - `1KG_phase3_v5_chr22.sites.vcf.gz`，只包含位点信息
-  - `chunks.chr22.txt` ，分块文件
+  - `1KG_phase3_v5_chr22_filtered.sites.vcf.gz`只包含位点信息
+  - `chunks.chr22.txt` 分块文件
 
 ## 2. 获得GLIMPSE的bin格式
-将第一步得到的bcf文件，依据`chunks.chr{1-22}.txt`文件转换为GLIMPSE2专用的bin格式
+将第一步得到的bcf文件，依据`chunks.chr22.txt`文件转换为GLIMPSE2专用的bin格式
 
 ```bash
 CHROM="chr22"
@@ -84,7 +83,7 @@ done < chunks.${CHROM}.txt
 ```
 
 ### 输出文件
-- 输出：
+- 输出例如：
   - `wgs_chr22_91182114_94924793.bin`
   - `wgs_chr22_93102579_98544975.bin`
   - ...
@@ -92,7 +91,7 @@ done < chunks.${CHROM}.txt
 ## 3. GLIMPSE参考集合说明
 
 ### 基本信息
-- 种群：未过滤,包含全部人种
+- 种群：包含全部人种
 - 样本数：2504个
 - 总位点数：47,069,698个
 
@@ -101,7 +100,7 @@ done < chunks.${CHROM}.txt
 for i in {1..22}; do
   CHROM="chr$i"
   echo "process $CHROM"
-  bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n' 1KG_phase3_v5_${CHROM}.sites.vcf.gz > ./${CHROM}_snp_info.txt
+  bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n' 1KG_phase3_v5_${CHROM}_filtered.sites.vcf.gz > ./${CHROM}_snp_info.txt
 done
 ```
 
@@ -110,7 +109,7 @@ done
 for i in {1..22}; do
   CHROM="chr$i"
   echo "process $CHROM"
-  vcftools --bcf 1KG_phase3_v5_shapeit2_${CHROM}.bcf --freq --out ${CHROM}_analysis_freq
+  vcftools --bcf 1KG_phase3_v5_shapeit2_${CHROM}_filtered.bcf --freq --out ${CHROM}_analysis_freq
 done
 ```
 
@@ -118,7 +117,6 @@ done
 
 ## 5. glimpse官方文档和相关文献
 
-## TODO
- - 最后的bin文件未保存到指定的路径下
+## 6. TODO
  - 目前多等位基因型拆分后，可能存在重复行
  - 支持按位点清单：chrom+pos + ref + alt进行过滤
